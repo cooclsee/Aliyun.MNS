@@ -41,7 +41,7 @@ namespace Aliyun.MNS.Util
                 if (data == null || data.Length == 0)
                     throw new ArgumentNullException("data", "Please specify data to sign.");
 
-                KeyedHashAlgorithm algorithm = KeyedHashAlgorithm.Create(algorithmName.ToString().ToUpper(CultureInfo.InvariantCulture));
+                KeyedHashAlgorithm algorithm = CreateAlgorithm(algorithmName.ToString().ToUpper(CultureInfo.InvariantCulture));
                 if (null == algorithm)
                     throw new InvalidOperationException("Please specify a KeyedHashAlgorithm to use.");
 
@@ -77,7 +77,8 @@ namespace Aliyun.MNS.Util
                 if (data == null || data.Length == 0)
                     throw new ArgumentNullException("data", "Please specify data to sign.");
 
-                KeyedHashAlgorithm algorithm = KeyedHashAlgorithm.Create(algorithmName.ToString().ToUpper(CultureInfo.InvariantCulture));
+                KeyedHashAlgorithm algorithm =
+                    KeyedHashAlgorithm.Create(algorithmName.ToString().ToUpper(CultureInfo.InvariantCulture));
                 if (null == algorithm)
                     throw new InvalidOperationException("Please specify a KeyedHashAlgorithm to use.");
 
@@ -93,6 +94,26 @@ namespace Aliyun.MNS.Util
                 }
             }
 
+            public KeyedHashAlgorithm CreateAlgorithm(string name)
+            {
+                KeyedHashAlgorithm algorithm;
+                switch (name)
+                {
+                    case "HMACSHA1":
+                        algorithm = new HMACSHA1();
+                        break;
+                    case "HMACSHA256":
+                        algorithm = new HMACSHA256();
+                        break;
+                    case "HMACMD5":
+                        algorithm = new HMACMD5();
+                        break;
+                    default:
+                        algorithm = KeyedHashAlgorithm.Create(name);
+                        break;
+                }
+                return algorithm;
+            }
         }
     }
 }
